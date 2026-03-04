@@ -11,6 +11,8 @@ export interface AppState {
   padding: number;
   fixedWidth: number;
   showLineNumbers: boolean;
+  highlightedLines: number[];
+  fileName: string;
 }
 
 export const DEFAULT_STATE: AppState = {
@@ -23,6 +25,8 @@ export const DEFAULT_STATE: AppState = {
   padding: 64,
   fixedWidth: 0,
   showLineNumbers: true,
+  highlightedLines: [],
+  fileName: "",
 };
 
 export function encodeState(state: AppState): string {
@@ -36,6 +40,8 @@ export function encodeState(state: AppState): string {
     pad: String(state.padding),
     w: String(state.fixedWidth),
     ln: state.showLineNumbers ? "1" : "0",
+    hl: state.highlightedLines.join(","),
+    file: state.fileName,
   });
   return params.toString();
 }
@@ -46,6 +52,7 @@ export function decodeState(hash: string): AppState | null {
     if (!raw) return null;
     const params = new URLSearchParams(raw);
     if (!params.has("code") && !params.has("theme")) return null;
+    const hl = params.get("hl") ?? "";
     return {
       code: params.get("code") ?? DEFAULT_STATE.code,
       themeId: (params.get("theme") as ThemeId) ?? DEFAULT_STATE.themeId,
@@ -59,6 +66,8 @@ export function decodeState(hash: string): AppState | null {
       padding: Number(params.get("pad") ?? DEFAULT_STATE.padding),
       fixedWidth: Number(params.get("w") ?? DEFAULT_STATE.fixedWidth),
       showLineNumbers: (params.get("ln") ?? "1") === "1",
+      highlightedLines: hl ? hl.split(",").map(Number).filter(Boolean) : [],
+      fileName: params.get("file") ?? DEFAULT_STATE.fileName,
     };
   } catch {
     return null;

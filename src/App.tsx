@@ -4,12 +4,21 @@ import { useCallback, useRef, useState } from "react";
 import CodeWindow from "./components/CodeWindow";
 import ExportToast from "./components/ExportToast";
 import Toolbar from "./components/Toolbar";
+import { useSettings } from "./context/SettingsContext";
+import cn from "./utils/classnames.ts";
 
 export default function App() {
+  const { fileName } = useSettings();
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastVisible, setToastVisible] = useState<boolean>(false);
+  const [capturing, setCapturing] = useState<boolean>(false);
 
   const windowRef = useRef<HTMLDivElement>(null);
+
+  const downloadName = fileName
+    ? fileName.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") +
+      ".png"
+    : "hugshot.png";
 
   const showToast = useCallback((msg: string) => {
     setToastMessage(msg);
@@ -17,28 +26,32 @@ export default function App() {
     setTimeout(() => setToastVisible(true), 10);
   }, []);
 
-  const captureCanvas = useCallback(async () => {
+  const capture = useCallback(async () => {
     if (!windowRef.current) return null;
-    return await html2canvas(windowRef.current, {
+    setCapturing(true);
+    await new Promise((resolve) => window.setTimeout(() => resolve(true), 1));
+    const canvas = await html2canvas(windowRef.current, {
       scale: 2,
       useCORS: true,
       backgroundColor: null,
       logging: false,
     });
+    setCapturing(false);
+    return canvas;
   }, []);
 
   const handleExport = useCallback(async () => {
-    const canvas = await captureCanvas();
+    const canvas = await capture();
     if (!canvas) return;
     const link = document.createElement("a");
-    link.download = "hugshot.png";
+    link.download = downloadName;
     link.href = canvas.toDataURL("image/png");
     link.click();
     showToast("PNG exported!");
-  }, [captureCanvas, showToast]);
+  }, [capture, showToast, downloadName]);
 
   const handleCopyImage = useCallback(async () => {
-    const canvas = await captureCanvas();
+    const canvas = await capture();
     if (!canvas) return;
     canvas.toBlob(async (blob) => {
       if (!blob) return;
@@ -51,7 +64,7 @@ export default function App() {
         showToast("Copy failed — try exporting instead.");
       }
     }, "image/png");
-  }, [captureCanvas, showToast]);
+  }, [capture, showToast]);
 
   const handleCopyLink = useCallback(async () => {
     await navigator.clipboard.writeText(window.location.href);
@@ -60,12 +73,14 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen flex flex-col"
+      className={cn("group min-h-screen flex flex-col", {
+        "is-capturing": capturing,
+      })}
       style={{ background: "#0d0d1a" }}
     >
       <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
         <div className="flex items-center gap-3">
-          <img src="/hf.svg" alt="Hugshot" className="w-7 h-7" />
+          <img src="/hf.svg" alt="Hugshot" className="w-9 h-9" />
           <span className="text-white font-mono font-semibold tracking-tight text-lg">
             hugshot
           </span>

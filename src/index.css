@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-mono: "JetBrains Mono", "Fira Code", "Fira Mono", "Cascadia Code",
-    monospace;
+  --font-mono:
+    "JetBrains Mono", "Fira Code", "Fira Mono", "Cascadia Code", monospace;
 }
 
 * {
@@ -12,6 +12,13 @@
 body {
   margin: 0;
   font-family: var(--font-mono);
+}
+
+/* Disable line wrapping in the code editor */
+.code-editor pre {
+  white-space: pre !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
 }
 
 /* Prism token overrides — applied inside .code-editor */

@@ -101,6 +101,8 @@ export interface ThemeConfig {
   text: string;
   border: string;
   lineNumber: string;
+  lineHighlight: string;
+  lineHighlightBorder: string | null;
 }
 
 export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
@@ -111,6 +113,8 @@ export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
     text: "#abb2bf",
     border: "#181a1f",
     lineNumber: "#495162",
+    lineHighlight: "rgba(255,255,255,0.07)",
+    lineHighlightBorder: null,
   },
   "night-owl": {
     background: "#011627",
@@ -119,6 +123,8 @@ export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
     text: "#d6deeb",
     border: "#1d3b53",
     lineNumber: "#4b6479",
+    lineHighlight: "rgba(255,255,255,0.06)",
+    lineHighlightBorder: null,
   },
   dracula: {
     background: "#282a36",
@@ -127,6 +133,8 @@ export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
     text: "#f8f8f2",
     border: "#191a21",
     lineNumber: "#6272a4",
+    lineHighlight: "rgba(255,255,255,0.07)",
+    lineHighlightBorder: null,
   },
   "solarized-dark": {
     background: "#002b36",
@@ -135,6 +143,8 @@ export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
     text: "#839496",
     border: "#00212b",
     lineNumber: "#586e75",
+    lineHighlight: "rgba(255,255,255,0.06)",
+    lineHighlightBorder: null,
   },
   nord: {
     background: "#2e3440",
@@ -143,6 +153,8 @@ export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
     text: "#d8dee9",
     border: "#1e2129",
     lineNumber: "#4c566a",
+    lineHighlight: "rgba(255,255,255,0.07)",
+    lineHighlightBorder: null,
   },
   synthwave: {
     background: "#1a1a2e",
@@ -151,6 +163,8 @@ export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
     text: "#e94560",
     border: "#0f3460",
     lineNumber: "#533483",
+    lineHighlight: "rgba(255,255,255,0.07)",
+    lineHighlightBorder: null,
   },
   monokai: {
     background: "#272822",
@@ -159,6 +173,8 @@ export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
     text: "#f8f8f2",
     border: "#1a1b18",
     lineNumber: "#75715e",
+    lineHighlight: "rgba(255,255,255,0.07)",
+    lineHighlightBorder: null,
   },
   "github-light": {
     background: "#ffffff",
@@ -167,6 +183,8 @@ export const THEME_CONFIGS: Record<ThemeId, ThemeConfig> = {
     text: "#24292e",
     border: "#e1e4e8",
     lineNumber: "#959da5",
+    lineHighlight: "rgba(255,251,198,0.8)",
+    lineHighlightBorder: "#e3c000",
   },
 };
 
