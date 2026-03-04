@@ -21,7 +21,6 @@ export default function Toolbar({ onExport, onCopyImage }: ToolbarProps) {
     themeId,
     languageId,
     backgroundId,
-    customBackground,
     fontSize,
     padding,
     fixedWidth,
@@ -29,7 +28,6 @@ export default function Toolbar({ onExport, onCopyImage }: ToolbarProps) {
     setThemeId,
     setLanguageId,
     setBackgroundId,
-    setCustomBackground,
     setFontSize,
     setPadding,
     setFixedWidth,
@@ -153,27 +151,6 @@ export default function Toolbar({ onExport, onCopyImage }: ToolbarProps) {
               </option>
             ))}
           </Select>
-
-          {/* Custom background color */}
-          <div className="flex flex-col gap-1">
-            <span className="text-white/40 text-xs uppercase tracking-wider font-mono">
-              Custom BG
-            </span>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={customBackground || "#1a1a2e"}
-                onChange={(e) => {
-                  setCustomBackground(e.target.value);
-                  setBackgroundId("none");
-                }}
-                className="w-8 h-8 rounded cursor-pointer border-0 bg-transparent"
-              />
-              <span className="text-white/50 text-xs font-mono">
-                {customBackground || "#1a1a2e"}
-              </span>
-            </div>
-          </div>
 
           {/* Line numbers */}
           <div className="flex flex-col gap-1">

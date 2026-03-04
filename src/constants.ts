@@ -41,7 +41,7 @@ export type LanguageId = (typeof LANGUAGES)[number]["id"];
 
 export const FONT_SIZES = [12, 13, 14, 15, 16, 18, 20, 24] as const;
 
-export const PADDING_SIZES = [16, 32, 48, 64, 96, 128] as const;
+export const PADDING_SIZES = [0, 16, 32, 48, 64, 96, 128] as const;
 
 export const WIDTH_PRESETS = [
   { label: "Auto", value: 0 },
@@ -55,6 +55,16 @@ export const WIDTH_PRESETS = [
 
 export const BACKGROUND_GRADIENTS = [
   { id: "none", label: "None", value: "transparent" },
+  {
+    id: "hugging-face",
+    label: "Hugging Face",
+    value: "linear-gradient(135deg, #0b0f19 0%, #0f172b 100%)",
+  },
+  {
+    id: "hugging-face-light",
+    label: "Hugging Face Light",
+    value: "linear-gradient(135deg, #d5d5d5 0%, #fff 100%)",
+  },
   {
     id: "electric",
     label: "Electric",

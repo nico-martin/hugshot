@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import type { RefObject } from "react";
 import { BACKGROUND_GRADIENTS } from "../constants";
 import { useSettings } from "../context/SettingsContext";
+import cn from "../utils/classnames.ts";
 import CodeEditor from "./CodeEditor";
 import WindowControls from "./WindowControls";
 
@@ -42,7 +43,9 @@ export default function CodeWindow({ windowRef }: CodeWindowProps) {
     >
       {/* The actual window card */}
       <div
-        className="rounded-xl overflow-hidden shadow-2xl w-full"
+        className={cn(`overflow-hidden shadow-2xl w-full`, {
+          "rounded-xl": padding !== 0,
+        })}
         style={{
           background: theme.windowBackground,
           border: `1px solid ${theme.border}`,
