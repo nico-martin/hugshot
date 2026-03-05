@@ -1,0 +1,69 @@
+name: Deploy to Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Write HF Space metadata to dist/README.md
+        run: |
+          cat > dist/README.md << 'EOF'
+          ---
+          title: Hugshot
+          emoji: 🤗
+          colorFrom: yellow
+          colorTo: orange
+          sdk: static
+          pinned: false
+          license: mit
+          short_description: Create beautiful code screenshots
+          ---
+
+          > **Contributing:** this Space is a mirror of the [GitHub repo](https://github.com/${{ github.repository }}). Please open issues and PRs there.
+          EOF
+
+      - name: Push to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+          # Clone the HF Space (shallow, we only need to replace content)
+          git clone https://user:${HF_TOKEN}@huggingface.co/spaces/nico-martin/hugshot hf-space --depth 1
+
+          # Replace everything except the .git folder
+          find hf-space -mindepth 1 -maxdepth 1 -not -name '.git' -exec rm -rf {} +
+          cp -r dist/. hf-space/
+
+          cd hf-space
+          git add -A
+
+          # Only commit if there are actual changes
+          if git diff --cached --quiet; then
+            echo "No changes to deploy."
+          else
+            git commit -m "Deploy from GitHub @ ${{ github.sha }}"
+            git push
+          fi
