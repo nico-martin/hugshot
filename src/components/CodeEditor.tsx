@@ -110,7 +110,9 @@ export default function CodeEditor() {
               top: offset.top,
               height: offset.height,
               background: theme.lineHighlight,
-              borderLeft: `3px solid ${theme.lineHighlightBorder}`,
+              ...(theme.lineHighlightBorder
+                ? { borderLeft: `3px solid ${theme.lineHighlightBorder}` }
+                : {}),
             }}
           />
         );

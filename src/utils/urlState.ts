@@ -19,6 +19,7 @@ export interface SettingsState {
   attrTwitter: string;
   attrHuggingFace: string;
   attrUrl: string;
+  attrTextColor: "light" | "dark";
 }
 
 export const DEFAULT_SETTINGS: SettingsState = {
@@ -34,6 +35,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   attrTwitter: "",
   attrHuggingFace: "",
   attrUrl: "",
+  attrTextColor: "light",
 };
 
 const STORAGE_KEY = "hugshot:settings";
@@ -78,6 +80,7 @@ export function encodeSettingsToHash(state: SettingsState): string {
     tw: state.attrTwitter,
     hf: state.attrHuggingFace,
     url: state.attrUrl,
+    atc: state.attrTextColor,
   });
   return params.toString();
 }
@@ -106,6 +109,9 @@ export function decodeSettingsFromHash(hash: string): SettingsState | null {
       attrTwitter: params.get("tw") ?? DEFAULT_SETTINGS.attrTwitter,
       attrHuggingFace: params.get("hf") ?? DEFAULT_SETTINGS.attrHuggingFace,
       attrUrl: params.get("url") ?? DEFAULT_SETTINGS.attrUrl,
+      attrTextColor:
+        (params.get("atc") as "light" | "dark") ??
+        DEFAULT_SETTINGS.attrTextColor,
     };
   } catch {
     return null;

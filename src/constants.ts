@@ -41,7 +41,7 @@ export type LanguageId = (typeof LANGUAGES)[number]["id"];
 
 export const FONT_SIZES = [12, 13, 14, 15, 16, 18, 20, 24] as const;
 
-export const PADDING_SIZES = [0, 16, 32, 48, 64, 96, 128] as const;
+export const PADDING_SIZES = [0, 16, 24, 32, 40, 48] as const;
 
 export const WIDTH_PRESETS = [
   { label: "Auto", value: 0 },

@@ -1,4 +1,3 @@
-import { Copy, Download, Link } from "lucide-react";
 import {
   BACKGROUND_GRADIENTS,
   FONT_SIZES,
@@ -34,6 +33,7 @@ export default function Toolbar({
     attrTwitter,
     attrHuggingFace,
     attrUrl,
+    attrTextColor,
   } = settings;
 
   const set = <K extends keyof typeof settings>(
@@ -51,7 +51,21 @@ export default function Toolbar({
           className="w-full justify-center"
           onClick={onExport}
         >
-          <Download size={16} />
+          {/* Download arrow */}
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
           Export PNG
         </Button>
         <Button
@@ -60,7 +74,20 @@ export default function Toolbar({
           className="w-full justify-center"
           onClick={onCopyImage}
         >
-          <Copy size={16} />
+          {/* Copy */}
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
           Copy Image
         </Button>
       </div>
@@ -78,7 +105,20 @@ export default function Toolbar({
           title="Copy shareable link"
           className="flex items-center gap-1.5 text-white/30 text-xs font-mono hover:text-white/60 transition-colors cursor-pointer"
         >
-          <Link size={12} />
+          {/* Link */}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
           Copy link
         </button>
       </div>
@@ -208,6 +248,28 @@ export default function Toolbar({
           value={attrUrl}
           onChange={(e) => set("attrUrl", e.target.value)}
         />
+
+        {/* Text color */}
+        <div className="flex flex-col gap-1">
+          <span className="text-white/40 text-xs uppercase tracking-wider font-mono">
+            Text Color
+          </span>
+          <div className="flex gap-2">
+            {(["light", "dark"] as const).map((c) => (
+              <button
+                key={c}
+                onClick={() => set("attrTextColor", c)}
+                className={`flex-1 py-1.5 rounded text-xs font-mono capitalize transition-colors cursor-pointer border ${
+                  attrTextColor === c
+                    ? "bg-white/20 border-white/40 text-white"
+                    : "bg-white/5 border-white/10 text-white/40 hover:text-white/60"
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
       </SidebarPanel>
     </div>
   );

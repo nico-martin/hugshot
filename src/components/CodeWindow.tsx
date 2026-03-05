@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import type { RefObject } from "react";
 import { BACKGROUND_GRADIENTS } from "../constants";
 import { useSettings } from "../context/SettingsContext";
+import { ICONS } from "../theme/icons";
 import cn from "../utils/classnames.ts";
 import CodeEditor from "./CodeEditor";
 import WindowControls from "./WindowControls";
@@ -12,8 +13,23 @@ interface CodeWindowProps {
 
 export default function CodeWindow({ windowRef }: CodeWindowProps) {
   const { settings, theme, ephemeral, setFileName } = useSettings();
-  const { backgroundId, customBackground, padding, fixedWidth } = settings;
+  const {
+    backgroundId,
+    customBackground,
+    padding,
+    fixedWidth,
+    attrGitHub,
+    attrTwitter,
+    attrHuggingFace,
+    attrUrl,
+    attrTextColor,
+  } = settings;
   const { fileName } = ephemeral;
+
+  const hasAttribution =
+    attrGitHub || attrTwitter || attrHuggingFace || attrUrl;
+  const attrColor =
+    attrTextColor === "dark" ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.7)";
 
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,12 +43,13 @@ export default function CodeWindow({ windowRef }: CodeWindowProps) {
   return (
     <div
       ref={windowRef}
-      className="flex items-center justify-center"
+      className="flex flex-col items-center justify-center"
       style={{
         padding,
         background: gradient,
         width: fixedWidth > 0 ? fixedWidth : undefined,
         minWidth: fixedWidth > 0 ? fixedWidth : 480,
+        gap: hasAttribution ? 12 : 0,
       }}
     >
       {/* The actual window card */}
@@ -99,6 +116,33 @@ export default function CodeWindow({ windowRef }: CodeWindowProps) {
         {/* Code */}
         <CodeEditor />
       </div>
+
+      {/* Attribution bar — outside the card, below it */}
+      {hasAttribution && (
+        <div className="flex justify-end items-center gap-7 w-full px-5">
+          {[
+            [attrGitHub, ICONS.github],
+            [attrTwitter, ICONS.x],
+            [attrHuggingFace, ICONS.huggingface],
+            [attrUrl, ICONS.link],
+          ]
+            .filter(([text]) => !!text)
+            .map(([text, icon]) => (
+              <span
+                className="flex items-center gap-3 text-lg font-mono"
+                style={{ color: attrColor }}
+              >
+                <span
+                  className="w-5 h-5 flex items-center justify-center"
+                  style={{ fill: "currentColor" }}
+                >
+                  {icon}
+                </span>
+                <span className="group-[.is-capturing]:-mt-[17px]">{text}</span>
+              </span>
+            ))}
+        </div>
+      )}
     </div>
   );
 }
