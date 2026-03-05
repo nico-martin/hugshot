@@ -1,6 +1,6 @@
 {
   "name": "hugshot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Create and share beautiful code screenshots",
   "type": "module",
   "scripts": {
