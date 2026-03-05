@@ -33,7 +33,7 @@ jobs:
           title: Hugshot
           emoji: 🤗
           colorFrom: yellow
-          colorTo: orange
+          colorTo: red
           sdk: static
           pinned: false
           license: mit
