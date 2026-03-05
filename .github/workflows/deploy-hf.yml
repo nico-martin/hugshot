@@ -1,6 +1,6 @@
 name: Deploy to Hugging Face Space
 
-on:
+"on":
   push:
     branches:
       - main
