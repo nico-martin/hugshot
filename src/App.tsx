@@ -1,23 +1,24 @@
 import html2canvas from "html2canvas";
-import { Link } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import CodeWindow from "./components/CodeWindow";
 import ExportToast from "./components/ExportToast";
 import Toolbar from "./components/Toolbar";
 import { useSettings } from "./context/SettingsContext";
 import cn from "./utils/classnames.ts";
+import { encodeSettingsToHash } from "./utils/urlState";
 
 export default function App() {
-  const { fileName } = useSettings();
+  const { settings, ephemeral } = useSettings();
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastVisible, setToastVisible] = useState<boolean>(false);
   const [capturing, setCapturing] = useState<boolean>(false);
 
   const windowRef = useRef<HTMLDivElement>(null);
 
-  const downloadName = fileName
-    ? fileName.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") +
-      ".png"
+  const downloadName = ephemeral.fileName
+    ? ephemeral.fileName
+        .replace(/[^a-zA-Z0-9._-]+/g, "-")
+        .replace(/^-+|-+$/g, "") + ".png"
     : "hugshot.png";
 
   const showToast = useCallback((msg: string) => {
@@ -67,54 +68,47 @@ export default function App() {
   }, [capture, showToast]);
 
   const handleCopyLink = useCallback(async () => {
-    await navigator.clipboard.writeText(window.location.href);
+    const hash = encodeSettingsToHash(settings);
+    const url = `${window.location.origin}${window.location.pathname}#${hash}`;
+    await navigator.clipboard.writeText(url);
     showToast("Link copied to clipboard!");
-  }, [showToast]);
+  }, [showToast, settings]);
 
   return (
     <div
-      className={cn("group min-h-screen flex flex-col", {
+      className={cn("group h-screen overflow-hidden flex flex-row", {
         "is-capturing": capturing,
       })}
       style={{ background: "#0d0d1a" }}
     >
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <img src="/hf.svg" alt="Hugshot" className="w-9 h-9" />
+      {/* Sidebar */}
+      <aside
+        className="flex flex-col w-80 h-screen border-r border-white/5 shrink-0"
+        style={{ background: "#0d0d1a" }}
+      >
+        {/* Logo / header */}
+        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
+          <img src="/hf.svg" alt="Hugshot" className="w-8 h-8" />
           <span className="text-white font-mono font-semibold tracking-tight text-lg">
             hugshot
           </span>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleCopyLink}
-            className="flex items-center gap-1.5 text-white/30 text-xs font-mono hover:text-white/60 transition-colors cursor-pointer"
-          >
-            <Link size={12} />
-            Copy link
-          </button>
-        </div>
-      </header>
 
-      <main className="flex-1 flex flex-col items-center gap-6 px-4 py-8">
-        <div className="w-full max-w-5xl">
-          <Toolbar onExport={handleExport} onCopyImage={handleCopyImage} />
+        {/* Toolbar (fills remaining space) */}
+        <div className="flex-1 overflow-y-auto px-4 py-5">
+          <Toolbar
+            onExport={handleExport}
+            onCopyImage={handleCopyImage}
+            onCopyLink={handleCopyLink}
+          />
         </div>
-        <div
-          className="w-full max-w-5xl rounded-2xl overflow-hidden"
-          style={{
-            background: "#111122",
-            border: "1px solid rgba(255,255,255,0.06)",
-          }}
-        >
-          <div className="flex items-center justify-center overflow-auto">
-            <CodeWindow windowRef={windowRef} />
-          </div>
-        </div>
+      </aside>
 
-        <p className="text-white/20 text-xs font-mono text-center">
-          Click inside the editor to start typing · Export or Copy to share
-        </p>
+      {/* Main canvas area */}
+      <main className="flex-1 flex flex-col items-center justify-center gap-6 px-8 py-8 overflow-hidden">
+        <div className="flex items-center justify-center overflow-auto">
+          <CodeWindow windowRef={windowRef} />
+        </div>
       </main>
 
       <ExportToast message={toastMessage} visible={toastVisible} />

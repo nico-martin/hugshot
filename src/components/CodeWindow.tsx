@@ -11,15 +11,9 @@ interface CodeWindowProps {
 }
 
 export default function CodeWindow({ windowRef }: CodeWindowProps) {
-  const {
-    backgroundId,
-    customBackground,
-    padding,
-    fixedWidth,
-    theme,
-    fileName,
-    setFileName,
-  } = useSettings();
+  const { settings, theme, ephemeral, setFileName } = useSettings();
+  const { backgroundId, customBackground, padding, fixedWidth } = settings;
+  const { fileName } = ephemeral;
 
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);

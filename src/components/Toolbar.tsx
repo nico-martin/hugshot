@@ -1,5 +1,4 @@
-import { Copy, Download, Settings2 } from "lucide-react";
-import { useState } from "react";
+import { Copy, Download, Link } from "lucide-react";
 import {
   BACKGROUND_GRADIENTS,
   FONT_SIZES,
@@ -9,14 +8,20 @@ import {
   WIDTH_PRESETS,
 } from "../constants";
 import { useSettings } from "../context/SettingsContext";
-import { Button, Select } from "../theme";
+import { Button, Input, Select, SidebarPanel } from "../theme";
 
 interface ToolbarProps {
   onExport: () => void;
   onCopyImage: () => void;
+  onCopyLink: () => void;
 }
 
-export default function Toolbar({ onExport, onCopyImage }: ToolbarProps) {
+export default function Toolbar({
+  onExport,
+  onCopyImage,
+  onCopyLink,
+}: ToolbarProps) {
+  const { settings, setSettings } = useSettings();
   const {
     themeId,
     languageId,
@@ -25,26 +30,64 @@ export default function Toolbar({ onExport, onCopyImage }: ToolbarProps) {
     padding,
     fixedWidth,
     showLineNumbers,
-    setThemeId,
-    setLanguageId,
-    setBackgroundId,
-    setFontSize,
-    setPadding,
-    setFixedWidth,
-    setShowLineNumbers,
-  } = useSettings();
+    attrGitHub,
+    attrTwitter,
+    attrHuggingFace,
+    attrUrl,
+  } = settings;
 
-  const [showSettings, setShowSettings] = useState(false);
+  const set = <K extends keyof typeof settings>(
+    key: K,
+    value: (typeof settings)[K]
+  ) => setSettings((s) => ({ ...s, [key]: value }));
 
   return (
-    <div className="flex flex-col gap-2 w-full">
-      {/* Main toolbar row */}
-      <div className="flex flex-wrap items-center gap-2 bg-[#1a1a2e]/80 backdrop-blur border border-white/10 rounded-xl px-4 py-2">
-        {/* Theme */}
+    <div className="flex flex-col gap-7 w-full">
+      {/* Export actions */}
+      <div className="flex flex-col gap-2">
+        <Button
+          variant="primary"
+          size="md"
+          className="w-full justify-center"
+          onClick={onExport}
+        >
+          <Download size={16} />
+          Export PNG
+        </Button>
+        <Button
+          variant="ghost"
+          size="md"
+          className="w-full justify-center"
+          onClick={onCopyImage}
+        >
+          <Copy size={16} />
+          Copy Image
+        </Button>
+      </div>
+
+      {/* Divider */}
+      <span className="h-px w-full bg-white/5" />
+
+      {/* Header row */}
+      <div className="flex items-center justify-between">
+        <span className="text-white font-mono font-semibold tracking-tight">
+          Settings
+        </span>
+        <button
+          onClick={onCopyLink}
+          title="Copy shareable link"
+          className="flex items-center gap-1.5 text-white/30 text-xs font-mono hover:text-white/60 transition-colors cursor-pointer"
+        >
+          <Link size={12} />
+          Copy link
+        </button>
+      </div>
+
+      <SidebarPanel title="Appearance">
         <Select
           label="Theme"
           value={themeId}
-          onChange={(e) => setThemeId(e.target.value as typeof themeId)}
+          onChange={(e) => set("themeId", e.target.value as typeof themeId)}
         >
           {THEMES.map((t) => (
             <option key={t.id} value={t.id}>
@@ -53,25 +96,11 @@ export default function Toolbar({ onExport, onCopyImage }: ToolbarProps) {
           ))}
         </Select>
 
-        {/* Language */}
-        <Select
-          label="Language"
-          value={languageId}
-          onChange={(e) => setLanguageId(e.target.value as typeof languageId)}
-        >
-          {LANGUAGES.map((l) => (
-            <option key={l.id} value={l.id}>
-              {l.label}
-            </option>
-          ))}
-        </Select>
-
-        {/* Background */}
         <Select
           label="Background"
           value={backgroundId}
           onChange={(e) =>
-            setBackgroundId(e.target.value as typeof backgroundId)
+            set("backgroundId", e.target.value as typeof backgroundId)
           }
         >
           {BACKGROUND_GRADIENTS.map((g) => (
@@ -80,98 +109,106 @@ export default function Toolbar({ onExport, onCopyImage }: ToolbarProps) {
             </option>
           ))}
         </Select>
+      </SidebarPanel>
 
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Settings toggle */}
-        <Button
-          variant={showSettings ? "outline" : "ghost"}
-          size="sm"
-          onClick={() => setShowSettings((v) => !v)}
+      <SidebarPanel title="Editor">
+        <Select
+          label="Language"
+          value={languageId}
+          onChange={(e) =>
+            set("languageId", e.target.value as typeof languageId)
+          }
         >
-          <Settings2 size={14} />
-          Settings
-        </Button>
+          {LANGUAGES.map((l) => (
+            <option key={l.id} value={l.id}>
+              {l.label}
+            </option>
+          ))}
+        </Select>
 
-        {/* Divider */}
-        <span className="w-px h-6 bg-white/10" />
+        <Select
+          label="Font Size"
+          value={fontSize}
+          onChange={(e) => set("fontSize", Number(e.target.value))}
+        >
+          {FONT_SIZES.map((s) => (
+            <option key={s} value={s}>
+              {s}px
+            </option>
+          ))}
+        </Select>
 
-        {/* Copy image */}
-        <Button variant="ghost" size="sm" onClick={onCopyImage}>
-          <Copy size={14} />
-          Copy
-        </Button>
-
-        {/* Export */}
-        <Button variant="primary" size="sm" onClick={onExport}>
-          <Download size={14} />
-          Export PNG
-        </Button>
-      </div>
-
-      {/* Settings panel */}
-      {showSettings && (
-        <div className="flex flex-wrap items-end gap-4 bg-[#1a1a2e]/80 backdrop-blur border border-white/10 rounded-xl px-4 py-3">
-          {/* Font size */}
-          <Select
-            label="Font Size"
-            value={fontSize}
-            onChange={(e) => setFontSize(Number(e.target.value))}
+        <div className="flex items-center justify-between">
+          <span className="text-white/40 text-xs uppercase tracking-wider font-mono">
+            Line Numbers
+          </span>
+          <button
+            onClick={() => set("showLineNumbers", !showLineNumbers)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+              showLineNumbers ? "bg-blue-500" : "bg-white/20"
+            }`}
           >
-            {FONT_SIZES.map((s) => (
-              <option key={s} value={s}>
-                {s}px
-              </option>
-            ))}
-          </Select>
-
-          {/* Padding */}
-          <Select
-            label="Padding"
-            value={padding}
-            onChange={(e) => setPadding(Number(e.target.value))}
-          >
-            {PADDING_SIZES.map((s) => (
-              <option key={s} value={s}>
-                {s}px
-              </option>
-            ))}
-          </Select>
-
-          {/* Fixed width */}
-          <Select
-            label="Width"
-            value={fixedWidth}
-            onChange={(e) => setFixedWidth(Number(e.target.value))}
-          >
-            {WIDTH_PRESETS.map((w) => (
-              <option key={w.value} value={w.value}>
-                {w.label}
-              </option>
-            ))}
-          </Select>
-
-          {/* Line numbers */}
-          <div className="flex flex-col gap-1">
-            <span className="text-white/40 text-xs uppercase tracking-wider font-mono">
-              Line Numbers
-            </span>
-            <button
-              onClick={() => setShowLineNumbers(!showLineNumbers)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                showLineNumbers ? "bg-blue-500" : "bg-white/20"
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                showLineNumbers ? "translate-x-6" : "translate-x-1"
               }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  showLineNumbers ? "translate-x-6" : "translate-x-1"
-                }`}
-              />
-            </button>
-          </div>
+            />
+          </button>
         </div>
-      )}
+      </SidebarPanel>
+
+      <SidebarPanel title="Canvas">
+        <Select
+          label="Padding"
+          value={padding}
+          onChange={(e) => set("padding", Number(e.target.value))}
+        >
+          {PADDING_SIZES.map((s) => (
+            <option key={s} value={s}>
+              {s}px
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          label="Width"
+          value={fixedWidth}
+          onChange={(e) => set("fixedWidth", Number(e.target.value))}
+        >
+          {WIDTH_PRESETS.map((w) => (
+            <option key={w.value} value={w.value}>
+              {w.label}
+            </option>
+          ))}
+        </Select>
+      </SidebarPanel>
+
+      <SidebarPanel title="Attribution">
+        <Input
+          label="GitHub"
+          placeholder="username"
+          value={attrGitHub}
+          onChange={(e) => set("attrGitHub", e.target.value)}
+        />
+        <Input
+          label="Twitter / X"
+          placeholder="username"
+          value={attrTwitter}
+          onChange={(e) => set("attrTwitter", e.target.value)}
+        />
+        <Input
+          label="Hugging Face"
+          placeholder="username"
+          value={attrHuggingFace}
+          onChange={(e) => set("attrHuggingFace", e.target.value)}
+        />
+        <Input
+          label="URL"
+          placeholder="https://..."
+          value={attrUrl}
+          onChange={(e) => set("attrUrl", e.target.value)}
+        />
+      </SidebarPanel>
     </div>
   );
 }

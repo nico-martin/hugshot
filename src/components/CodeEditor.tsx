@@ -31,16 +31,10 @@ function highlight(code: string, language: LanguageId): string {
 }
 
 export default function CodeEditor() {
-  const {
-    code,
-    languageId,
-    theme,
-    fontSize,
-    showLineNumbers,
-    highlightedLines,
-    setCode,
-    setHighlightedLines,
-  } = useSettings();
+  const { settings, theme, ephemeral, setCode, setHighlightedLines } =
+    useSettings();
+  const { languageId, fontSize, showLineNumbers } = settings;
+  const { code, highlightedLines } = ephemeral;
 
   const lineCount = code.split("\n").length;
   const lineHeightPx = Math.round(fontSize * 1.6);
@@ -121,7 +115,6 @@ export default function CodeEditor() {
           />
         );
       })}
-
       {/* Line numbers */}
       {showLineNumbers && (
         <div
@@ -159,9 +152,8 @@ export default function CodeEditor() {
           })}
         </div>
       )}
-
       {/* Code */}
-      <div className="code-editor flex-1 min-w-0 relative z-10 overflow-x-auto group-[.is-capturing]:-mt-[8px] group-[.is-capturing]:pb-[10px]">
+      <div className="code-editor flex-1 min-w-0 relative z-10 overflow-x-auto group-[.is-capturing]:-mt-2 group-[.is-capturing]:pb-2.5">
         <Editor
           value={code}
           onValueChange={setCode}
