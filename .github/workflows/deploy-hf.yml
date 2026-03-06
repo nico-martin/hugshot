@@ -40,6 +40,8 @@ jobs:
           pinned: false
           license: mit
           short_description: Create beautiful code screenshots
+          thumbnail: >-
+            https://cdn-uploads.huggingface.co/production/uploads/6468b720b2321e47d32683da/nCjsbT_xEtMCUJ9O6Q8rf.png
           ---
 
           > **Contributing:** this Space is a mirror of the [GitHub repo](https://github.com/${{ github.repository }}). Please open issues and PRs there.
