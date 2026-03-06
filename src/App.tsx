@@ -14,7 +14,6 @@ export default function App() {
 
   const windowRef = useRef<HTMLDivElement>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
-  const isMounted = useRef(false);
 
   const downloadName = settings.fileName
     ? settings.fileName
@@ -83,20 +82,6 @@ export default function App() {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPreview, settings, code, highlightedLines]);
-
-  // Keep the parent HF Space URL in sync with current settings.
-  // On HF, the app runs in an iframe; postMessage propagates the hash to
-  // the parent page URL. Outside HF this is a no-op (window === window.parent).
-  // Skip the first render so we don't clobber the incoming hash that HF sends
-  // via hashchange shortly after the iframe loads.
-  useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-      return;
-    }
-    const hash = encodeSettingsToHash(settings);
-    window.parent.postMessage({ hash }, "https://huggingface.co");
-  }, [settings]);
 
   const handleCopyLink = useCallback(async () => {
     const hash = encodeSettingsToHash(settings);
