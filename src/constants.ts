@@ -48,7 +48,7 @@ export const WIDTH_PRESETS = [
 ] as const;
 
 export const BACKGROUND_GRADIENTS = [
-  { id: "none", label: "None", value: "transparent" },
+  { id: "none", label: "Transparent", value: "transparent" },
   {
     id: "hugging-face",
     label: "Dark",

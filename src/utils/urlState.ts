@@ -14,6 +14,8 @@ export interface SettingsState {
   padding: number;
   fixedWidth: number;
   showLineNumbers: boolean;
+  fileName: string;
+  showWindowControls: boolean;
   // Attribution — stored in settings, will later be rendered in the image
   attrGitHub: string;
   attrTwitter: string;
@@ -25,17 +27,19 @@ export interface SettingsState {
 export const DEFAULT_SETTINGS: SettingsState = {
   themeId: "dark",
   languageId: "typescript",
-  backgroundId: "hugging-face",
-  customBackground: "#0b0f19",
+  backgroundId: "hugging-face-light",
+  customBackground: "#fffbe8",
   fontSize: 14,
-  padding: 64,
+  padding: 32,
   fixedWidth: 0,
   showLineNumbers: true,
+  fileName: "",
+  showWindowControls: true,
   attrGitHub: "",
   attrTwitter: "",
   attrHuggingFace: "",
   attrUrl: "",
-  attrTextColor: "light",
+  attrTextColor: "dark",
 };
 
 const STORAGE_KEY = "hugshot:settings";
@@ -48,7 +52,11 @@ export function loadFromStorage(): SettingsState | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw) as SettingsState;
+    // Merge with defaults so newly-added keys always have a fallback value
+    return {
+      ...DEFAULT_SETTINGS,
+      ...(JSON.parse(raw) as Partial<SettingsState>),
+    };
   } catch {
     return null;
   }
@@ -76,6 +84,8 @@ export function encodeSettingsToHash(state: SettingsState): string {
     pad: String(state.padding),
     w: String(state.fixedWidth),
     ln: state.showLineNumbers ? "1" : "0",
+    fn: state.fileName,
+    wc: state.showWindowControls ? "1" : "0",
     gh: state.attrGitHub,
     tw: state.attrTwitter,
     hf: state.attrHuggingFace,
@@ -105,6 +115,8 @@ export function decodeSettingsFromHash(hash: string): SettingsState | null {
       padding: Number(params.get("pad") ?? DEFAULT_SETTINGS.padding),
       fixedWidth: Number(params.get("w") ?? DEFAULT_SETTINGS.fixedWidth),
       showLineNumbers: (params.get("ln") ?? "1") === "1",
+      fileName: params.get("fn") ?? DEFAULT_SETTINGS.fileName,
+      showWindowControls: (params.get("wc") ?? "1") === "1",
       attrGitHub: params.get("gh") ?? DEFAULT_SETTINGS.attrGitHub,
       attrTwitter: params.get("tw") ?? DEFAULT_SETTINGS.attrTwitter,
       attrHuggingFace: params.get("hf") ?? DEFAULT_SETTINGS.attrHuggingFace,

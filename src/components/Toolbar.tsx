@@ -30,6 +30,8 @@ export default function Toolbar({
     padding,
     fixedWidth,
     showLineNumbers,
+    fileName,
+    showWindowControls,
     attrGitHub,
     attrTwitter,
     attrHuggingFace,
@@ -152,6 +154,35 @@ export default function Toolbar({
             <span
               className={`inline-block h-4 w-4 transform rounded-full transition-transform ${
                 showLineNumbers
+                  ? "translate-x-6 bg-[#1a1200]"
+                  : "translate-x-1 bg-white"
+              }`}
+            />
+          </button>
+        </div>
+      </SidebarPanel>
+
+      <SidebarPanel title="Window">
+        <Input
+          label="Filename"
+          placeholder="index.ts"
+          value={fileName}
+          onChange={(e) => set("fileName", e.target.value)}
+        />
+
+        <div className="flex items-center justify-between">
+          <span className="text-white/40 text-xs uppercase tracking-wider font-mono">
+            Window Controls
+          </span>
+          <button
+            onClick={() => set("showWindowControls", !showWindowControls)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+              showWindowControls ? "bg-[#FFD21E]" : "bg-white/20"
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full transition-transform ${
+                showWindowControls
                   ? "translate-x-6 bg-[#1a1200]"
                   : "translate-x-1 bg-white"
               }`}

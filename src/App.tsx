@@ -8,15 +8,15 @@ import cn from "./utils/classnames.ts";
 import { encodeSettingsToHash } from "./utils/urlState";
 
 export default function App() {
-  const { settings, ephemeral } = useSettings();
+  const { settings } = useSettings();
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastVisible, setToastVisible] = useState<boolean>(false);
   const [capturing, setCapturing] = useState<boolean>(false);
 
   const windowRef = useRef<HTMLDivElement>(null);
 
-  const downloadName = ephemeral.fileName
-    ? ephemeral.fileName
+  const downloadName = settings.fileName
+    ? settings.fileName
         .replace(/[^a-zA-Z0-9._-]+/g, "-")
         .replace(/^-+|-+$/g, "") + ".png"
     : "hugshot.png";

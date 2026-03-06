@@ -8,7 +8,6 @@ import { useStorageState } from "../utils/useStorageState";
 /** Ephemeral state — never persisted anywhere */
 export interface EphemeralState {
   code: string;
-  fileName: string;
   highlightedLines: number[];
 }
 
@@ -23,7 +22,6 @@ interface SettingsContextValue {
   /** Ephemeral — lives in memory only */
   ephemeral: EphemeralState;
   setCode: (code: string) => void;
-  setFileName: (name: string) => void;
   setHighlightedLines: (lines: number[]) => void;
   toggleHighlightedLine: (line: number) => void;
 }
@@ -34,7 +32,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useStorageState();
 
   const [code, setCode] = useState<string>(DEFAULT_CODE);
-  const [fileName, setFileName] = useState<string>("");
   const [highlightedLines, setHighlightedLines] = useState<number[]>([]);
 
   const toggleHighlightedLine = useCallback(
@@ -49,9 +46,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     settings,
     setSettings,
     theme: THEME_CONFIGS[settings.themeId],
-    ephemeral: { code, fileName, highlightedLines },
+    ephemeral: { code, highlightedLines },
     setCode,
-    setFileName,
     setHighlightedLines,
     toggleHighlightedLine,
   };
