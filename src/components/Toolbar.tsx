@@ -30,6 +30,7 @@ export default function Toolbar({
     padding,
     fixedWidth,
     showLineNumbers,
+    showPreview,
     fileName,
     showWindowControls,
     attrGitHub,
@@ -215,6 +216,26 @@ export default function Toolbar({
             </option>
           ))}
         </Select>
+
+        <div className="flex items-center justify-between">
+          <span className="text-white/40 text-xs uppercase tracking-wider font-mono">
+            Show Preview
+          </span>
+          <button
+            onClick={() => set("showPreview", !showPreview)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+              showPreview ? "bg-[#FFD21E]" : "bg-white/20"
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full transition-transform ${
+                showPreview
+                  ? "translate-x-6 bg-[#1a1200]"
+                  : "translate-x-1 bg-white"
+              }`}
+            />
+          </button>
+        </div>
       </SidebarPanel>
 
       <SidebarPanel title="Attribution">

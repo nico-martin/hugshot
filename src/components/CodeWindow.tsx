@@ -70,12 +70,12 @@ export default function CodeWindow({ windowRef }: CodeWindowProps) {
         >
           {showWindowControls ? <WindowControls /> : <div />}
           {fileName && (
-            <span
-              className="text-xs font-mono opacity-60 group-[.is-capturing]:-mt-3 py-3"
+            <div
+              className="text-xs font-mono opacity-60 py-3"
               style={{ color: theme.text }}
             >
               {fileName}
-            </span>
+            </div>
           )}
         </div>
 
@@ -104,7 +104,7 @@ export default function CodeWindow({ windowRef }: CodeWindowProps) {
                 >
                   {icon}
                 </span>
-                <span className="group-[.is-capturing]:-mt-[17px]">{text}</span>
+                <span>{text}</span>
               </span>
             ))}
         </div>

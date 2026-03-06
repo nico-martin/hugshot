@@ -1,5 +1,5 @@
-import html2canvas from "html2canvas";
-import { useCallback, useRef, useState } from "react";
+import * as htmlToImage from "html-to-image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CodeWindow from "./components/CodeWindow";
 import ExportToast from "./components/ExportToast";
 import Toolbar from "./components/Toolbar";
@@ -8,12 +8,12 @@ import cn from "./utils/classnames.ts";
 import { encodeSettingsToHash } from "./utils/urlState";
 
 export default function App() {
-  const { settings } = useSettings();
+  const { settings, ephemeral } = useSettings();
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastVisible, setToastVisible] = useState<boolean>(false);
-  const [capturing, setCapturing] = useState<boolean>(false);
 
   const windowRef = useRef<HTMLDivElement>(null);
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const downloadName = settings.fileName
     ? settings.fileName
@@ -27,19 +27,16 @@ export default function App() {
     setTimeout(() => setToastVisible(true), 10);
   }, []);
 
-  const capture = useCallback(async () => {
-    if (!windowRef.current) return null;
-    setCapturing(true);
-    await new Promise((resolve) => window.setTimeout(() => resolve(true), 1));
-    const canvas = await html2canvas(windowRef.current, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: null,
-      logging: false,
-    });
-    setCapturing(false);
-    return canvas;
-  }, []);
+  const capture = useCallback(
+    async ({ scale = 2 }: { scale?: number } = {}) => {
+      if (!windowRef.current) return null;
+      return await htmlToImage.toCanvas(windowRef.current, {
+        canvasWidth: windowRef.current.clientWidth * scale,
+        canvasHeight: windowRef.current.clientHeight * scale,
+      });
+    },
+    []
+  );
 
   const handleExport = useCallback(async () => {
     const canvas = await capture();
@@ -67,6 +64,25 @@ export default function App() {
     }, "image/png");
   }, [capture, showToast]);
 
+  const { showPreview } = settings;
+  const { code, highlightedLines } = ephemeral;
+
+  useEffect(() => {
+    if (!showPreview) return;
+    if (!windowRef.current || !previewCanvasRef.current) return;
+    (async () => {
+      const canvas = await capture({ scale: 1 });
+      if (!previewCanvasRef.current || !canvas) return;
+      const ctx = previewCanvasRef.current.getContext("2d");
+      if (!ctx) return;
+      previewCanvasRef.current.width = canvas.width;
+      previewCanvasRef.current.height = canvas.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(canvas, 0, 0);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showPreview, settings, code, highlightedLines]);
+
   const handleCopyLink = useCallback(async () => {
     const hash = encodeSettingsToHash(settings);
     const url = `${window.location.origin}${window.location.pathname}#${hash}`;
@@ -76,9 +92,7 @@ export default function App() {
 
   return (
     <div
-      className={cn("group h-screen overflow-hidden flex flex-row", {
-        "is-capturing": capturing,
-      })}
+      className={cn("group h-screen overflow-hidden flex flex-row")}
       style={{ background: "#0f172b" }}
     >
       {/* Sidebar */}
@@ -105,10 +119,22 @@ export default function App() {
       </aside>
 
       {/* Main canvas area */}
-      <main className="flex-1 flex flex-col items-center justify-center gap-6 px-8 py-8 overflow-hidden">
-        <div className="flex items-center justify-center overflow-auto">
-          <CodeWindow windowRef={windowRef} />
-        </div>
+      <main className="flex-1 flex flex-col items-center justify-center gap-6 px-8 py-8 overflow-auto">
+        <CodeWindow windowRef={windowRef} />
+
+        {/* Live preview canvas */}
+        {showPreview && (
+          <div className="flex flex-col gap-2">
+            <span className="text-white/40 text-xs uppercase tracking-wider font-mono">
+              Preview
+            </span>
+            <canvas
+              ref={previewCanvasRef}
+              className="max-w-full max-h-full object-contain"
+              style={{ imageRendering: "auto" }}
+            />
+          </div>
+        )}
       </main>
 
       <ExportToast message={toastMessage} visible={toastVisible} />

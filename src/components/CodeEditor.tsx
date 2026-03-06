@@ -121,7 +121,7 @@ export default function CodeEditor() {
       {showLineNumbers && (
         <div
           ref={lineNumColRef}
-          className="relative select-none text-right pr-4 pb-3 pl-4 z-10 group-[.is-capturing]:-mt-[8px]"
+          className="relative select-none text-right pr-4 pb-3 pl-4 z-10"
           style={{
             fontSize,
             fontFamily: "var(--font-mono)",
@@ -156,7 +156,7 @@ export default function CodeEditor() {
       )}
       {/* Code */}
       <div
-        className="code-editor flex-1 min-w-0 relative z-10 overflow-x-auto group-[.is-capturing]:-mt-2 group-[.is-capturing]:pb-2.5"
+        className="code-editor flex-1 min-w-0 relative z-10 overflow-x-auto"
         data-theme={settings.themeId}
       >
         <Editor

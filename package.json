@@ -11,6 +11,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
   "dependencies": {
+    "html-to-image": "^1.11.13",
     "html2canvas": "latest",
     "lucide-react": "latest",
     "prismjs": "latest",
