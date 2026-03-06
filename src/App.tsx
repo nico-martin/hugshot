@@ -95,7 +95,7 @@ export default function App() {
       return;
     }
     const hash = encodeSettingsToHash(settings);
-    window.parent.postMessage({ hash: `#${hash}` }, "https://huggingface.co");
+    window.parent.postMessage({ hash }, "https://huggingface.co");
   }, [settings]);
 
   const handleCopyLink = useCallback(async () => {

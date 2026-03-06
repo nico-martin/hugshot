@@ -141,10 +141,17 @@ export function decodeSettingsFromHash(hash: string): SettingsState | null {
  * during normal use.
  */
 export function resolveInitialSettings(): SettingsState {
+  console.log(
+    "[hugshot] resolveInitialSettings — window.location.hash:",
+    JSON.stringify(window.location.hash)
+  );
   const fromUrl = decodeSettingsFromHash(window.location.hash);
   if (fromUrl) {
+    console.log(
+      "[hugshot] resolveInitialSettings — decoded from hash:",
+      fromUrl
+    );
     saveToStorage(fromUrl);
-    // Remove the hash without adding a history entry
     window.history.replaceState(
       null,
       "",
@@ -152,5 +159,10 @@ export function resolveInitialSettings(): SettingsState {
     );
     return fromUrl;
   }
-  return loadFromStorage() ?? DEFAULT_SETTINGS;
+  const fromStorage = loadFromStorage();
+  console.log(
+    "[hugshot] resolveInitialSettings — no hash, using storage/defaults. fromStorage:",
+    fromStorage ? "found" : "null"
+  );
+  return fromStorage ?? DEFAULT_SETTINGS;
 }
