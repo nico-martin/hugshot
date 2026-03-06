@@ -27,7 +27,7 @@ export interface SettingsState {
 
 export const DEFAULT_SETTINGS: SettingsState = {
   themeId: "dark",
-  languageId: "typescript",
+  languageId: "javascript",
   backgroundId: "hugging-face-light",
   customBackground: "#fffbe8",
   fontSize: 14,
