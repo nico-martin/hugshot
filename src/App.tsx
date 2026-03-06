@@ -83,6 +83,14 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPreview, settings, code, highlightedLines]);
 
+  // Keep the parent HF Space URL in sync with current settings.
+  // On HF, the app runs in an iframe; postMessage propagates the hash to
+  // the parent page URL. Outside HF this is a no-op (window === window.parent).
+  useEffect(() => {
+    const hash = encodeSettingsToHash(settings);
+    window.parent.postMessage({ hash: `#${hash}` }, "https://huggingface.co");
+  }, [settings]);
+
   const handleCopyLink = useCallback(async () => {
     const hash = encodeSettingsToHash(settings);
     const base =
