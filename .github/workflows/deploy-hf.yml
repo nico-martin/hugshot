@@ -24,6 +24,8 @@ jobs:
         run: npm i
 
       - name: Build
+        env:
+          VITE_CANONICAL_URL: ${{ secrets.VITE_CANONICAL_URL }}
         run: npm run build
 
       - name: Write HF Space metadata to dist/README.md
