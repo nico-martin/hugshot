@@ -85,7 +85,10 @@ export default function App() {
 
   const handleCopyLink = useCallback(async () => {
     const hash = encodeSettingsToHash(settings);
-    const url = `${window.location.origin}${window.location.pathname}#${hash}`;
+    const base =
+      import.meta.env.VITE_CANONICAL_URL?.replace(/\/$/, "") ??
+      `${window.location.origin}${window.location.pathname}`.replace(/\/$/, "");
+    const url = `${base}#${hash}`;
     await navigator.clipboard.writeText(url);
     showToast("Link copied to clipboard!");
   }, [showToast, settings]);

@@ -11,3 +11,12 @@ createRoot(document.getElementById("root")!).render(
     </SettingsProvider>
   </StrictMode>
 );
+
+window.addEventListener("hashchange", () =>
+  window.parent.postMessage(
+    {
+      hash: window.location.hash,
+    },
+    "https://huggingface.co"
+  )
+);
