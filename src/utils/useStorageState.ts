@@ -37,13 +37,15 @@ export function useStorageState() {
       const fromHash = decodeSettingsFromHash(window.location.hash);
       if (!fromHash) return;
       saveToStorage(fromHash);
-      // Strip the hash from the iframe URL so it doesn't linger.
+      setStateRaw(fromHash);
+      // Clear the hash from the parent HF page URL via postMessage,
+      // and from the iframe URL via replaceState.
+      window.parent.postMessage({ hash: "" }, "https://huggingface.co");
       window.history.replaceState(
         null,
         "",
         window.location.pathname + window.location.search
       );
-      setStateRaw(fromHash);
     };
 
     window.addEventListener("hashchange", onHashChange);
