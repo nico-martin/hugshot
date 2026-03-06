@@ -60,7 +60,8 @@ export default function CodeWindow({ windowRef }: CodeWindowProps) {
         style={{
           background: theme.windowBackground,
           border: `1px solid ${theme.border}`,
-          boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+          boxShadow:
+            "0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,210,30,0.08)",
         }}
       >
         {/* Title bar */}

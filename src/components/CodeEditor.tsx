@@ -155,7 +155,10 @@ export default function CodeEditor() {
         </div>
       )}
       {/* Code */}
-      <div className="code-editor flex-1 min-w-0 relative z-10 overflow-x-auto group-[.is-capturing]:-mt-2 group-[.is-capturing]:pb-2.5">
+      <div
+        className="code-editor flex-1 min-w-0 relative z-10 overflow-x-auto group-[.is-capturing]:-mt-2 group-[.is-capturing]:pb-2.5"
+        data-theme={settings.themeId}
+      >
         <Editor
           value={code}
           onValueChange={setCode}

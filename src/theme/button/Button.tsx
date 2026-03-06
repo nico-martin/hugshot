@@ -1,5 +1,4 @@
 import type { ButtonHTMLAttributes } from "react";
-
 import cn from "../../utils/classnames";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -24,7 +23,7 @@ export default function Button({
           "px-4 py-2 text-sm": size === "md",
         },
         {
-          "bg-white text-black hover:bg-gray-100 active:scale-95":
+          "bg-[#FFD21E] text-[#1a1200] hover:bg-[#ffe566] active:scale-95 font-semibold":
             variant === "primary",
           "text-white/70 hover:text-white hover:bg-white/10 active:bg-white/20":
             variant === "ghost",

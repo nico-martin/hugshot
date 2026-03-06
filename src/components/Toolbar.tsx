@@ -1,3 +1,4 @@
+import { Copy, Download, Link } from "lucide-react";
 import {
   BACKGROUND_GRADIENTS,
   FONT_SIZES,
@@ -51,21 +52,7 @@ export default function Toolbar({
           className="w-full justify-center"
           onClick={onExport}
         >
-          {/* Download arrow */}
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
+          <Download size={16} />
           Export PNG
         </Button>
         <Button
@@ -74,26 +61,13 @@ export default function Toolbar({
           className="w-full justify-center"
           onClick={onCopyImage}
         >
-          {/* Copy */}
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-          </svg>
+          <Copy size={16} />
           Copy Image
         </Button>
       </div>
 
       {/* Divider */}
-      <span className="h-px w-full bg-white/5" />
+      <span className="h-px w-full bg-[#FFD21E]/15" />
 
       {/* Header row */}
       <div className="flex items-center justify-between">
@@ -105,20 +79,7 @@ export default function Toolbar({
           title="Copy shareable link"
           className="flex items-center gap-1.5 text-white/30 text-xs font-mono hover:text-white/60 transition-colors cursor-pointer"
         >
-          {/* Link */}
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-          </svg>
+          <Link size={12} />
           Copy link
         </button>
       </div>
@@ -185,12 +146,14 @@ export default function Toolbar({
           <button
             onClick={() => set("showLineNumbers", !showLineNumbers)}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-              showLineNumbers ? "bg-blue-500" : "bg-white/20"
+              showLineNumbers ? "bg-[#FFD21E]" : "bg-white/20"
             }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                showLineNumbers ? "translate-x-6" : "translate-x-1"
+              className={`inline-block h-4 w-4 transform rounded-full transition-transform ${
+                showLineNumbers
+                  ? "translate-x-6 bg-[#1a1200]"
+                  : "translate-x-1 bg-white"
               }`}
             />
           </button>

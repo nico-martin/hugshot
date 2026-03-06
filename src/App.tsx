@@ -79,15 +79,15 @@ export default function App() {
       className={cn("group h-screen overflow-hidden flex flex-row", {
         "is-capturing": capturing,
       })}
-      style={{ background: "#0d0d1a" }}
+      style={{ background: "#0f172b" }}
     >
       {/* Sidebar */}
       <aside
-        className="flex flex-col w-80 h-screen border-r border-white/5 shrink-0"
-        style={{ background: "#0d0d1a" }}
+        className="flex flex-col w-80 h-screen border-r border-white/10 shrink-0"
+        style={{ background: "#0f172b" }}
       >
         {/* Logo / header */}
-        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
+        <div className="flex items-center gap-3 px-5 py-5 border-b border-[#FFD21E]/20">
           <img src="/hf.svg" alt="Hugshot" className="w-8 h-8" />
           <span className="text-white font-mono font-semibold tracking-tight text-lg">
             hugshot

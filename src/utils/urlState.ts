@@ -23,10 +23,10 @@ export interface SettingsState {
 }
 
 export const DEFAULT_SETTINGS: SettingsState = {
-  themeId: "one-dark",
+  themeId: "dark",
   languageId: "typescript",
-  backgroundId: "electric",
-  customBackground: "#1a1a2e",
+  backgroundId: "hugging-face",
+  customBackground: "#0b0f19",
   fontSize: 14,
   padding: 64,
   fixedWidth: 0,
